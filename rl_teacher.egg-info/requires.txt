@@ -1,4 +1,4 @@
-mujoco-py ~=0.5.7
+mujoco-py~=0.5.7
 gym[mujoco]
 tqdm
 matplotlib
@@ -8,7 +8,7 @@ ipdb
 keras
 
 [tf]
-tensorflow ~= 1.2
+tensorflow~=1.2
 
 [tf_gpu]
-tensorflow-gpu >= 1.1
+tensorflow-gpu>=1.1
