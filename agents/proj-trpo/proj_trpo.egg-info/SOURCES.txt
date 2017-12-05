@@ -1,0 +1,5 @@
+proj_trpo.egg-info/PKG-INFO
+proj_trpo.egg-info/SOURCES.txt
+proj_trpo.egg-info/dependency_links.txt
+proj_trpo.egg-info/requires.txt
+proj_trpo.egg-info/top_level.txt
