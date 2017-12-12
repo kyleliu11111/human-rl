@@ -77,7 +77,7 @@ def vectorized_rollout(env, agent, max_timesteps_per_episode, timesteps_per_batc
     timesteps_elapsed = 0
     first = True
     while timesteps_elapsed < timesteps_per_batch:
-        obs, actions, rewards, action_dists_mu, action_dists_logstd, orig_rewards = [], [], [], [], [], []
+        obs, actions, rewards, action_dists_mu, action_dists_logstd, orig_rewards, human_obs = [], [], [], [], [], [], []
         ob = obs_filter(env.reset())
         agent.prev_action *= 0.0
         agent.prev_obs *= 0.0
@@ -93,7 +93,8 @@ def vectorized_rollout(env, agent, max_timesteps_per_episode, timesteps_per_batc
             ob = obs_filter(ob)
             orig_rewards.append(reward)
             rewards.append(reward)
-            # rewards.append(self.predictor.predict_reward())
+            human_obs.append(info.get("human_obs"))
+            # rewards.append(predictor.predict_reward())
             if render and first: env.render()
             if done or timesteps_elapsed == timesteps_per_batch:
                 # forceful termination if timesteps_sofar == n_timesteps
@@ -102,10 +103,12 @@ def vectorized_rollout(env, agent, max_timesteps_per_episode, timesteps_per_batc
                     action_dists=np.concatenate(action_dists_mu),
                     action_dists_logstd=np.concatenate(action_dists_logstd),
                     rewards=np.array(rewards),
-                    actions=np.array(actions))
-                path["rewards"] = np.array(rewards)
-                # path["rewards"] = predictor.predict_reward(path)
+                    actions=np.array(actions),
+                    human_obs=np.array(human_obs))
+                # path["rewards"] = np.array(rewards)
+                path["rewards"] = predictor.predict_reward(path)
                 path["original_rewards"] = np.array(rewards)
+                predictor.path_callback(path)
                 paths.append(path)
                 # print("steps in ep: ", len(rewards))
                 # print("maxsteps in ep: ", max_timesteps_per_episode)
@@ -241,3 +244,19 @@ class ConfigObject(dict):
     def __init__(self, **kwargs):
         dict.__init__(self, kwargs)
         self.__dict__ = self
+
+
+def make_fully_connected(
+        layer_name,
+        input_layer,
+        output_size,
+        final_op=tf.nn.relu,
+        weight_init=tf.random_uniform_initializer(-0.05, 0.05),
+        bias_init=tf.constant_initializer(0)):
+    with tf.variable_scope(layer_name):
+        w = tf.get_variable("w", [input_layer.shape[1], output_size], initializer=weight_init)
+        b = tf.get_variable("b", [output_size], initializer=bias_init)
+    raw = tf.matmul(input_layer, w) + b
+    if final_op:
+        return final_op(raw), [w, b]
+    return raw, [w, b]

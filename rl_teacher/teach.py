@@ -9,6 +9,8 @@ import tensorflow as tf
 from keras import backend as K
 from parallel_trpo.train import train_parallel_trpo
 from pposgd_mpi.run_mujoco import train_pposgd_mpi
+from proj_trpo.main import TRPO
+from proj_trpo.utils import ConfigObject
 
 from rl_teacher.comparison_collectors import SyntheticComparisonCollector, HumanComparisonCollector
 from rl_teacher.envs import get_timesteps_per_episode
@@ -307,6 +309,8 @@ def main():
 
     # We use a vanilla agent from openai/baselines that contains a single change that blinds it to the true reward
     # The single changed section is in `rl_teacher/agent/trpo/core.py`
+    print(tf.trainable_variables())
+
     print("Starting joint training of predictor and agent")
     if args.agent == "parallel_trpo":
         train_parallel_trpo(
@@ -321,6 +325,19 @@ def main():
             max_kl=0.001,
             seed=args.seed,
         )
+    elif args.agent == "proj_trpo":
+        config = ConfigObject(
+            timesteps_per_batch=8000,
+            predictor=predictor,
+            max_pathlength=get_timesteps_per_episode(env),
+            gamma=.99,
+            n_iter=3000,
+            max_kl=0.001,
+            env_id=env_id,
+            name=args.name,
+            cg_damping=1e-3)
+        agent = TRPO(env, config)
+        agent.learn()
     elif args.agent == "pposgd_mpi":
         def make_env():
             return make_with_torque_removed(env_id)

@@ -9,7 +9,7 @@ def add_simple_summary(summary_writer, tag, simple_value, step):
 
 class TBLogger():
     def __init__(self, env_id, name):
-        logs_path = osp.expanduser('~/tb/rl-teacher/%s/ilyasu/%s' % (env_id, name))
+        logs_path = osp.expanduser('~/tb/rl-teacher/%s/%s' % (env_id, name))
         self.summary_writer = tf.summary.FileWriter(logs_path)
         self.summary_step = 0
 

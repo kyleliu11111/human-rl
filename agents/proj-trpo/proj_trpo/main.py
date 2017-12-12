@@ -36,10 +36,14 @@ class TRPO(object):
         self.old_action_dist_logstd = old_action_dist_logstd = tf.placeholder(dtype, shape=[None, act_dim])
 
         # Create neural network.
-        action_dist, _ = (pt.wrap(self.obs).
-            fully_connected(64, activation_fn=tf.nn.relu).
+        h1, h1_vars = make_fully_connected("policy_h1", self.obs, 64)
+        h2, h2_vars = make_fully_connected("policy_h3", h1, act_dim, final_op=None)
+
+        action_dist = h2
+        # action_dist, _ = (pt.wrap(self.obs).
+        #     fully_connected(64, activation_fn=tf.nn.relu).
             # fully_connected(64, activation_fn=tf.nn.relu).
-            fully_connected(act_dim))  # output means and logstd's
+            # fully_connected(act_dim))  # output means and logstd's
 
         action_dist_logstd_param = tf.Variable((.01 * np.random.randn(1, act_dim)).astype(np.float32))
         action_dist_logstd = tf.tile(action_dist_logstd_param, tf.stack((tf.shape(action_dist)[0], 1)))
@@ -212,6 +216,7 @@ class TRPO(object):
             episodes_elapsed += len(paths)
             stats["timesteps_elapsed"] = timesteps_elapsed
             stats["episodes_elapsed"] = episodes_elapsed
+            stats["Average sum of true rewards per episode"] = np.array([path["original_rewards"].sum() for path in paths]).mean()#ep_rewards.mean()
             stats["reward_mean_per_episode"] = ep_rewards.mean()
             stats["entropy"] = entropy
             stats["kl_difference_between_old_and_new"] = kl_old_new
