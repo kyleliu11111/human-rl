@@ -1,4 +1,4 @@
-mujoco-py ~=0.5.7
+mujoco-py~=0.5.7
 gym>=0.9.1[mujoco]
 mujoco-py
 scipy
@@ -7,10 +7,10 @@ joblib
 zmq
 dill
 progressbar2
-mpi4py ~= 2.0.0
+mpi4py~=2.0.0
 
 [tf]
-tensorflow ~= 1.2
+tensorflow~=1.2
 
 [tf_gpu]
-tensorflow-gpu >= 1.1
+tensorflow-gpu>=1.1

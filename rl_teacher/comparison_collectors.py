@@ -72,7 +72,8 @@ class HumanComparisonCollector():
         local_path = osp.join(tmp_media_dir, media_id)
         gcs_bucket = os.environ.get('RL_TEACHER_GCS_BUCKET')
         gcs_path = osp.join(gcs_bucket, media_id)
-        self._upload_workers.apply_async(_write_and_upload_video, (self.env_id, gcs_path, local_path, segment))
+        _write_and_upload_video(self.env_id, gcs_path, local_path, segment)
+#        self._upload_workers.apply_async(_write_and_upload_video, (self.env_id, gcs_path, local_path, segment))
 
         media_url = "https://storage.googleapis.com/%s/%s" % (gcs_bucket.lstrip("gs://"), media_id)
         return media_url
@@ -95,7 +96,7 @@ class HumanComparisonCollector():
 
     def add_segment_pair(self, left_seg, right_seg):
         """Add a new unlabeled comparison from a segment pair"""
-
+        print("test 3")
         comparison_id = self._create_comparison_in_webapp(left_seg, right_seg)
         comparison = {
             "left": left_seg,

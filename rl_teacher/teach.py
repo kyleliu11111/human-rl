@@ -153,6 +153,7 @@ class ComparisonRewardPredictor():
         # If we need more comparisons, then we build them from our recent segments
         too_many_labels = len(self.comparison_collector.unlabeled_comparisons) > 20
         if len(self.comparison_collector) < int(self.label_schedule.n_desired_labels) and not too_many_labels and len(self.recent_segments) > 1:
+            print("test 2")
             i1 = random.randint(0, len(self.recent_segments) - 1)
             i2 = random.randint(0, len(self.recent_segments) - 1)
             if i1 != i2:
@@ -281,6 +282,7 @@ def main():
             env_id, make_with_torque_removed, n_desired_segments=pretrain_labels * 2,
             clip_length_in_seconds=CLIP_LENGTH, workers=args.workers)
         for i in range(pretrain_labels):  # Turn our random segments into comparisons
+            print("test 1")
             comparison_collector.add_segment_pair(pretrain_segments[i], pretrain_segments[i + pretrain_labels])
 
         # Sleep until the human has labeled most of the pretraining comparisons

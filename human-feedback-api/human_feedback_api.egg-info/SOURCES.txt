@@ -1,3 +1,4 @@
+README.md
 human_feedback_api.egg-info/PKG-INFO
 human_feedback_api.egg-info/SOURCES.txt
 human_feedback_api.egg-info/dependency_links.txt

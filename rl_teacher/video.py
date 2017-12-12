@@ -7,6 +7,8 @@ import subprocess
 import numpy as np
 from gym import error
 
+import time
+
 class SegmentVideoRecorder(object):
     def __init__(self, predictor, env, save_dir, checkpoint_interval=500):
         self.predictor = predictor
@@ -30,6 +32,7 @@ class SegmentVideoRecorder(object):
         return self.predictor.predict_reward(path)
 
 def write_segment_to_video(segment, fname, env):
+    print("test")
     os.makedirs(osp.dirname(fname), exist_ok=True)
     frames = [env.render_full_obs(x) for x in segment["human_obs"]]
     for i in range(int(env.fps * 0.2)):
