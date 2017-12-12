@@ -1,5 +1,4 @@
 # RL-Teacher
-# added to Wilbur's local
 
 `rl-teacher` is an implementation of [*Deep Reinforcement Learning from Human Preferences*](https://arxiv.org/abs/1706.03741) [Christiano et al., 2017].
 
@@ -10,11 +9,9 @@ The system allows you to teach a reinforcement learning agent novel behaviors, e
 
 It's also just a lot of fun to train simulated robots to do whatever you want! For example, in the MuJoCo "Walker" environment, the agent is usually rewarded for moving forwards, but you might want to teach it to do ballet instead:
 
-<p align="center">
-<img src="https://user-images.githubusercontent.com/306655/28396526-d4ce6334-6cb0-11e7-825c-63a85c8ff533.gif" />
-</p>
+The original repository can be found [here](https://github.com/nottombrown/rl-teacher). Our main code contribution is a [synchronous implementation of TRPO](/agents/proj-trpo/proj_trpo) which accepts human labels, which seems to learn faster than the parallelized implementation [here](/agents/parallel-trpo/parallel_trpo) under limited computational resources.
 
-See our [agent circus](#agent-circus) for other tricks that you can train an agent to do using `rl-teacher`
+We leave the following details from the original repository's README.md for convenience.
 
 ## What's in this repository?
 
